@@ -8,7 +8,7 @@ use App\Http\Controllers\ProfileController;
 
 
 
-Route::get('/', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('/u/{user:username}', [ProfileController::class, 'index'])->name('profile');
 
 
