@@ -6,7 +6,12 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import TabItem from "./Partials/TabItem.vue";
 import Edit from "@/Pages/Profile/Edit.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import { XMarkIcon, CheckCircleIcon, PhotoIcon, CameraIcon } from "@heroicons/vue/20/solid";
+import {
+    XMarkIcon,
+    CheckCircleIcon,
+    PhotoIcon,
+    CameraIcon,
+} from "@heroicons/vue/20/solid";
 
 const showNotification = ref(true);
 const imagesForm = useForm({
@@ -18,7 +23,7 @@ const authUser = usePage().props.auth.user;
 const isMyProfile = computed(() => authUser && authUser.id === props.user.id);
 
 const coverImageSrc = ref("");
-const avatarImageSrc = ref('');
+const avatarImageSrc = ref("");
 const props = defineProps({
     errors: Object,
     mustVerifyEmail: {
@@ -32,7 +37,7 @@ const props = defineProps({
     },
     success: {
         type: String,
-    }
+    },
 });
 
 function resetCoverImage() {
@@ -168,67 +173,52 @@ function submitAvatarImage() {
                     </div>
                 </div>
 
-
                 <div class="flex">
-                    <div class="flex items-center justify-center relative group/avatar -mt-[64px] ml-[25px] w-[150px] h-[150px] rounded-full">
-                        <img
-                        :src="avatarImageSrc || user.avatar_url || '/img/default_avatar.jpg'"
-                        class="w-full h-full  object-cover rounded-full mr-10"
-                    />
-
-                    <button
-                        v-if="!avatarImageSrc"
-                        class="absoulte flex items-center justify-center -ml-20 right-0 bottom-0 bg-black/25 rounded-full text-gray-200 opacity-0 group-hover/avatar:opacity-100"
-                        @change="onAvatarChange"
-                    >
-                        <CameraIcon class="w-4 h-4"/>
-
-                        <input
-                            type="file"
-                            class="absolute left-0 top-0 bottom-0 right-0 cursor-pointer opacity-0"
-                        />
-                    </button>
                     <div
-                        v-else
-                        class="absolute top-2 right-0 flex flex-col gap-2">
+                        class="flex items-center justify-center relative group/avatar -mt-[64px] ml-[25px] w-[150px] h-[150px] rounded-full"
+                    >
+                        <img
+                            :src="
+                                avatarImageSrc ||
+                                user.avatar_url ||
+                                '/img/default_avatar.jpg'
+                            "
+                            class="w-full h-full object-cover rounded-full mr-10"
+                        />
+
                         <button
-                            @click="resetAvatarImage"
-                            class="w-7 h-7 flex items-center justify-center bg-red-500/80 text-white rounded-full"
+                            v-if="!avatarImageSrc"
+                            class="absoulte flex items-center justify-center -ml-20 right-0 bottom-0 bg-black/25 rounded-full text-gray-200 opacity-0 group-hover/avatar:opacity-100"
+                            @change="onAvatarChange"
                         >
-                            <XMarkIcon class="h-5 w-5" />
+                            <CameraIcon class="w-8 h-8" />
 
+                            <input
+                                type="file"
+                                class="absolute left-0 top-0 bottom-0 right-0 cursor-pointer opacity-0"
+                            />
                         </button>
-
-                        <button
-                            @click="submitAvatarImage"
-                            class="w-7 h-7 flex items-center justify-center bg-emerald-500/80 text-white rounded-full"
+                        <div
+                            v-else
+                            class="absolute top-2 right-0 flex flex-col gap-2"
                         >
-                            <CheckCircleIcon class="h-5 w-5" />
+                            <button
+                                @click="resetAvatarImage"
+                                class="w-7 h-7 flex items-center justify-center bg-red-500/80 text-white rounded-full"
+                            >
+                                <XMarkIcon class="h-5 w-5" />
+                            </button>
 
-                        </button>
-                    </div>
-
+                            <button
+                                @click="submitAvatarImage"
+                                class="w-7 h-7 flex items-center justify-center bg-emerald-500/80 text-white rounded-full"
+                            >
+                                <CheckCircleIcon class="h-5 w-5" />
+                            </button>
+                        </div>
                     </div>
                     <div class="flex justify-between items-center flex-1 p-4">
                         <h2 class="font-bold text-lg">{{ authUser.name }}</h2>
-                        <PrimaryButton v-if="isMyProfile">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.5"
-                                stroke="currentColor"
-                                class="w-4 h-4 mr-2"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
-                                />
-                            </svg>
-
-                            Edit Profile
-                        </PrimaryButton>
                     </div>
                 </div>
             </div>
@@ -236,13 +226,6 @@ function submitAvatarImage() {
             <div class="border-t">
                 <TabGroup>
                     <TabList class="flex bg-white">
-                        <Tab
-                            v-if="isMyProfile"
-                            v-slot="{ selected }"
-                            as="template"
-                        >
-                            <TabItem text="About" :selected="selected" />
-                        </Tab>
                         <Tab v-slot="{ selected }" as="template">
                             <TabItem text="Posts" :selected="selected" />
                         </Tab>
@@ -256,20 +239,16 @@ function submitAvatarImage() {
                         <Tab v-slot="{ selected }" as="template">
                             <TabItem text="Photos" :selected="selected" />
                         </Tab>
+                        <Tab
+                            v-if="isMyProfile"
+                            v-slot="{ selected }"
+                            as="template"
+                        >
+                            <TabItem text="My Profile" :selected="selected" />
+                        </Tab>
                     </TabList>
 
                     <TabPanels class="mt-2">
-                        <TabPanel
-                            v-if="isMyProfile"
-                            key="about"
-                            class="bg-white p-3 shadow"
-                        >
-                            <Edit
-                                :must-verify-email="mustVerifyEmail"
-                                :status="status"
-                            />
-                        </TabPanel>
-
                         <TabPanel key="posts" class="bg-white p-3 shadow">
                             Post Content
                         </TabPanel>
@@ -284,6 +263,16 @@ function submitAvatarImage() {
 
                         <TabPanel key="photos" class="bg-white p-3 shadow">
                             Photos
+                        </TabPanel>
+                        <TabPanel
+                            v-if="isMyProfile"
+                            key="about"
+                            class="bg-white p-3 shadow"
+                        >
+                            <Edit
+                                :must-verify-email="mustVerifyEmail"
+                                :status="status"
+                            />
                         </TabPanel>
                     </TabPanels>
                 </TabGroup>
