@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserResource;
 use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -18,7 +19,8 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function index(User $user) {
+    public function index(User $user)
+    {
         return Inertia::render('Profile/View', [
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
@@ -70,10 +72,11 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    public function updateImage(Request $request) {
+    public function updateImage(Request $request)
+    {
         $data = $request->validate([
             'cover' => ['nullable', 'image', 'mimes:png,jpg,jpeg'],
-            'avatar'=> ['nullable', 'image']
+            'avatar' => ['nullable', 'image']
         ]);
 
         $user = $request->user();
@@ -82,8 +85,11 @@ class ProfileController extends Controller
         $cover = $data['cover'] ?? null;
 
         if ($cover) {
-          $path = $cover->store('avatars/'. $user->id, 'public');
-          $user->update(['cover_path' => $path]);
+            if ($user->cover_path) {
+                Storage::disk('public')->delete($user->cover_path);
+            }
+            $path = $cover->store('user-' . $user->id, 'public');
+            $user->update(['cover_path' => $path]);
         }
 
         session('success',  'Cover image has been updated');

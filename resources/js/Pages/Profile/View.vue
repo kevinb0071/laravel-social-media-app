@@ -8,12 +8,10 @@ import Edit from "@/Pages/Profile/Edit.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { XMarkIcon, CheckCircleIcon } from "@heroicons/vue/20/solid";
 
-
-
 const showNotification = ref(true);
 const imagesForm = useForm({
     avatar: null,
-    cover: null
+    cover: null,
 });
 
 const authUser = usePage().props.auth.user;
@@ -33,21 +31,20 @@ const props = defineProps({
     },
 });
 
-
 function cancelCoverImage() {
-   imagesForm.cover = null;
-   coverImageSrc.value = null;
+    imagesForm.cover = null;
+    coverImageSrc.value = null;
 }
 
 function submitCoverImage() {
-    imagesForm.post(route('profile.updateCover'), {
+    imagesForm.post(route("profile.updateCover"), {
         onSuccess: (user) => {
-            cancelCoverImage()
-            setTimeout( ()=> {
-            showNotification.value = false;
-        }, 3000);
+            cancelCoverImage();
+            setTimeout(() => {
+                showNotification.value = false;
+            }, 3000);
         },
-    })
+    });
 }
 
 function onCoverChange(event) {
@@ -60,23 +57,24 @@ function onCoverChange(event) {
         reader.readAsDataURL(imagesForm.cover);
     }
 }
-
-
-
-
 </script>
 <template>
     <AuthenticatedLayout>
-        <div v-show="showNotification && status === 'cover-image-update'" class="my-2  py-2 px-3 font-medium text-sm bg-emerald-500  text-white">
+        <div
+            v-show="showNotification && status === 'cover-image-update'"
+            class="my-2 py-2 px-3 font-medium text-sm bg-emerald-500 text-white"
+        >
             Your cover image has been updated
         </div>
 
-        <div v-if="errors.cover" class="my-2  py-2 px-3 font-medium text-sm bg-red-500  text-white">
-                    {{ errors.cover }}
-                </div>
+        <div
+            v-if="errors.cover"
+            class="my-2 py-2 px-3 font-medium text-sm bg-red-500 text-white"
+        >
+            {{ errors.cover }}
+        </div>
         <div class="max-w-[900px] mx-auto h-full overflow-auto">
             <div class="group relative bg-white">
-
                 <img
                     :src="
                         coverImageSrc ||
@@ -117,15 +115,20 @@ function onCoverChange(event) {
                             class="absolute left-0 top-0 bottom-0 right-0 cursor-pointer opacity-0"
                         />
                     </button>
-                    <div v-else class="flex gap-2 opacity-0 bg-white p-2 group-hover:opacity-100">
-                        <button @click="cancelCoverImage"
+                    <div
+                        v-else
+                        class="flex gap-2 opacity-0 bg-white p-2 group-hover:opacity-100"
+                    >
+                        <button
+                            @click="cancelCoverImage"
                             class="bg-gray-50 hover:bg-gray-100 text-gray-800 py-1 px-3 tx-xs flex items-center"
                         >
                             <XMarkIcon class="h-3 w-3 mr-2" />
                             Cancel
                         </button>
 
-                        <button @click="submitCoverImage"
+                        <button
+                            @click="submitCoverImage"
                             class="bg-gray-800 hover:bg-gray-900 text-gray-100 py-1 px-3 text-xs flex items-center"
                         >
                             <CheckCircleIcon class="h-3 w-3 mr-2" />
