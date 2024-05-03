@@ -6,7 +6,9 @@ import PostList from "@/Components/app/PostList.vue";
 import CreatePost from "@/Components/app/CreatePost.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
-defineProps({});
+defineProps({
+    posts: Object,
+});
 
 function handleImageError() {
     document.getElementById("screenshot-container")?.classList.add("!hidden");
@@ -32,7 +34,7 @@ function handleImageError() {
                 class="lg:col-span-6 lg:order-2 h-full overflow-hidden flex flex-col"
             >
                 <CreatePost />
-                <PostList class="flex-1" />
+                <PostList :posts="posts.data" class="flex-1" />
             </div>
         </div>
     </AuthenticatedLayout>
