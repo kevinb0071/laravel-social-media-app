@@ -34,7 +34,22 @@ const emit = defineEmits(["update:modelValue"]);
 const editor = ClassicEditor;
 
 const editorConfig = {
-    toolbar: ['heading', '|', 'bold', 'italic', '|', 'link', '|', 'bulletedList', 'numberedList', '|', 'outdent', 'indent', '|', 'blockQuote'],
+    toolbar: [
+        "heading",
+        "|",
+        "bold",
+        "italic",
+        "|",
+        "link",
+        "|",
+        "bulletedList",
+        "numberedList",
+        "|",
+        "outdent",
+        "indent",
+        "|",
+        "blockQuote",
+    ],
 };
 
 watch(
@@ -46,12 +61,21 @@ watch(
 );
 
 function submit() {
-    form.put(route("post.update", props.post.id), {
-        preserveScroll: true,
-        onSuccess: () => {
-            show.value = false;
-        },
-    });
+    if (form.id) {
+        form.put(route("post.update", props.post.id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                (show.value = false), form.reset();
+            },
+        });
+    } else {
+        form.post(route("post.create"), {
+            preserveScroll: true,
+            onSuccess: () => {
+                (show.value = false), form.reset();
+            },
+        });
+    }
 }
 
 function closeModal() {
@@ -71,7 +95,7 @@ function closeModal() {
                     leave-from="opacity-100"
                     leave-to="opacity-0"
                 >
-                    <div class="fixed inset-0 bg-black/25" />
+                    <div class="fixed inset-0 bg-black/25"></div>
                 </TransitionChild>
 
                 <div class="fixed inset-0 overflow-y-auto">
@@ -94,7 +118,9 @@ function closeModal() {
                                     as="h3"
                                     class="flex items-center justify-between py-3 px-4 font-medium bg-gray-100 text-gray-900"
                                 >
-                                    Update Post
+                                    {{
+                                        form.id ? "Update Post" : "Create Post"
+                                    }}
                                     <button
                                         @click="show = false"
                                         class="w-8 h-8 rounded-full hover:bg-black/5 transition flex items-center justify-center"

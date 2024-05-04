@@ -8,7 +8,7 @@ const model = defineModel({
 });
 const props = defineProps({
     type: String,
-    required: true,
+    required: false,
     placeholder: String,
     autoResize: {
         type: Boolean,

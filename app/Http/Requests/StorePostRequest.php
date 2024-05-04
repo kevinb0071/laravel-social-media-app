@@ -32,6 +32,7 @@ class StorePostRequest extends FormRequest
     {
         $this->merge([
             'user_id' => auth()->user()->id,
+            'body' => $this->input('body') ?: '',
         ]);
     }
 }
