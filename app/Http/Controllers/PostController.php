@@ -35,7 +35,7 @@ class PostController extends Controller
         $data = $request->validated();
         Post::create($data);
 
-        return  back();
+        return back();
     }
 
     /**
@@ -59,7 +59,8 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $post->update($request->validated());
+        return back();
     }
 
     /**
