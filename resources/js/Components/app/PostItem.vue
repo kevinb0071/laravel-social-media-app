@@ -102,15 +102,13 @@ function deletePost() {
                                 </MenuItems>
                             </transition>
                         </Menu>
-
-
         </div>
         <div class="mb-3">
             <Disclosure v-slot="{ open }">
-                <div v-if="!open" v-html="post.body.substring(0, 200)"></div>
+                <div class="ck-content-output" v-if="!open" v-html="post.body.substring(0, 200)"></div>
                 <template v-if="post.body.length > 200">
                     <DisclosurePanel>
-                        <div v-html="post.body"></div>
+                        <div class="ck-content-output"  v-html="post.body"></div>
                     </DisclosurePanel>
                     <div class="flex justify-end mb-3">
                         <DisclosureButton class="text-blue-500 hover:underline">
