@@ -28,6 +28,7 @@ const props = defineProps({
 const form = useForm({
     id: null,
     body: "",
+    attachments: [],
 });
 const show = computed({
     get: () => props.modelValue,
@@ -67,29 +68,37 @@ watch(
     }
 );
 
+function resetModal() {
+    form.reset()
+    attachmentFiles.value = []
+}
+
+function closeModal() {
+    show.value = false
+    resetModal()
+}
+
+
 function submit() {
+    form.attachments = attachmentFiles.value.map(myFile => myFile.file)
     if (form.id) {
         form.put(route("post.update", props.post.id), {
             preserveScroll: true,
             onSuccess: () => {
-                (show.value = false), form.reset();
+               closeModal()
             },
         });
     } else {
         form.post(route("post.create"), {
             preserveScroll: true,
             onSuccess: () => {
-                (show.value = false), form.reset();
+               closeModal()
             },
         });
     }
 }
 
-function closeModal() {
-    show.value = false
-    form.reset()
-    attachmentFiles.value = []
-}
+
 
 async function onAttachmentChoose($event) {
     for (const file of $event.target.files) {
@@ -125,7 +134,7 @@ function removeFile(myFile) {
 <template>
     <teleport to="body">
         <TransitionRoot appear :show="show" as="template">
-            <Dialog as="div" @close="closeModal" class="relative z-10">
+            <Dialog as="div" @close="closeModal" class="relative z-50">
                 <TransitionChild
                     as="template"
                     enter="duration-300 ease-out"
@@ -180,10 +189,12 @@ function removeFile(myFile) {
                                         :config="editorConfig"
                                     ></ckeditor>
                                     <div
-                                        class="grid grid-cols-2 lg:grid-cols-3 gap-3 my-3"
+                                        class="grid gap-3 my-3" :class="[
+                                            attachmentFiles.length == 1 ? 'grid-cols-1' : 'grid-cols-2'
+                                        ]"
                                     >
                                         <template
-                                            v-for="myFile of attachmentFiles"
+                                            v-for="(myFile, ind) of attachmentFiles"
                                         >
                                             <div
                                                 class="group aspect-square bg-blue-100 flex flex-col items-center justify-center text-gray-500 relative"
@@ -201,7 +212,7 @@ function removeFile(myFile) {
                                                 <img
                                                     v-if="isImage(myFile.file)"
                                                     :src="myFile.url"
-                                                    class="object-cover aspect-square"
+                                                    class="object-contain aspect-square"
                                                 />
                                                 <template v-else>
                                                     <PaperClipIcon
